@@ -1,5 +1,9 @@
 package br.com.alura.screenmatch.principal;
 
+import br.com.alura.screenmatch.modelos.Titulo;
+import com.google.gson.Gson;
+
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -8,7 +12,7 @@ import java.util.Scanner;
 
 public class PrincipalComBusca {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException, InterruptedException {
 
     Scanner leitura = new Scanner(System.in);
     System.out.println("Digite um filme para busca: ");
@@ -19,13 +23,22 @@ public class PrincipalComBusca {
     HttpRequest request = HttpRequest.newBuilder()
         .uri(URI.create(endereco))
         .build();
-    client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-        .thenApply(HttpResponse::body)
-        .thenAccept(System.out::println)
-        .exceptionally(ex -> {
-          System.err.println("Erro ao realizar a requisição: " + ex.getMessage());
-          return null;
-        })
-        .join();
+//    client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+//        .thenApply(HttpResponse::body)
+//        .thenAccept(System.out::println)
+//        .exceptionally(ex -> {
+//          System.err.println("Erro ao realizar a requisição: " + ex.getMessage());
+//          return null;
+//        })
+//        .join();
+
+    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+    String json = response.body();
+    System.out.println(json);
+    Gson gson = new Gson();
+    Titulo meuTitulo = gson.fromJson(json, Titulo.class);
+    System.out.println("Titulo: " + meuTitulo.getNome());
+//    gson.
   }
 }
