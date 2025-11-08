@@ -1,7 +1,10 @@
 package br.com.alura.screenmatch.principal;
 
 import br.com.alura.screenmatch.modelos.Titulo;
+import br.com.alura.screenmatch.modelos.TituloOmdb;
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.net.URI;
@@ -36,9 +39,28 @@ public class PrincipalComBusca {
 
     String json = response.body();
     System.out.println(json);
-    Gson gson = new Gson();
-    Titulo meuTitulo = gson.fromJson(json, Titulo.class);
-    System.out.println("Titulo: " + meuTitulo.getNome());
-//    gson.
+
+    /*
+    Vai fazer com que as propriedades do meu record:
+      public record TituloOmdb(String title, String year, String runtime) {}
+        que hoje estão como lowerCase ex: title, fique como Title (UPPER_CAMEL_CASE).
+
+    Permitindo assim que meu conversor de json para classe de match no nome das props,
+    ou seja, meu json vem como "Title" e meu TituloOmdb apesar de title foi convertido via builder
+    para Title também, permitindo que ele sette as coisas que vem do json para o Record
+      ex json {"Title: "Contadores de Carros", "Year": 1995 }
+      gson.fromJson(json, TituloOmdb.class);
+    * */
+    Gson gson = new GsonBuilder()
+        .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+        .create();
+
+//    Titulo meuTitulo = gson.fromJson(json, Titulo.class);
+    TituloOmdb meuTituloOmdb = gson.fromJson(json, TituloOmdb.class);
+    System.out.println("meuTituloOmdb: " + meuTituloOmdb);
+
+    Titulo meuTitulo = new Titulo(meuTituloOmdb);
+
+    System.out.println("meuTitulo: " + meuTitulo);
   }
 }
