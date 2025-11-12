@@ -65,6 +65,8 @@ public class PrincipalComBusca {
     } catch (NumberFormatException e) {
       System.out.println("Aconteceu um erro: ");
       System.out.println(e.getMessage());
+    } finally {
+      System.out.println("Executa independente de sucesso ou erro.");
     }
 
   }
