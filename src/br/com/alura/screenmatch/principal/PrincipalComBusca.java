@@ -66,6 +66,8 @@ public class PrincipalComBusca {
       System.out.println(e.getMessage());
     } catch (IllegalArgumentException e) {
       System.out.println("Algum erro de argumento na busca, verifique o endereço.");
+    } catch (Exception e) {
+      System.out.println("Erro inesperado código 56789");
     } finally {
       System.out.println("Executa independente de sucesso ou erro.");
     }
