@@ -16,16 +16,16 @@ import java.util.Scanner;
 public class PrincipalComBusca {
 
   public static void main(String[] args) throws IOException, InterruptedException {
+    try {
+      Scanner leitura = new Scanner(System.in);
+      System.out.println("Digite um filme para busca: ");
+      var busca = leitura.nextLine();
+      String endereco = "https://www.omdbapi.com/?t=" + busca + "&apikey=4f274003";
 
-    Scanner leitura = new Scanner(System.in);
-    System.out.println("Digite um filme para busca: ");
-    var busca = leitura.nextLine();
-    String endereco = "https://www.omdbapi.com/?t=" + busca + "&apikey=4f274003";
-
-    HttpClient client = HttpClient.newHttpClient();
-    HttpRequest request = HttpRequest.newBuilder()
-        .uri(URI.create(endereco))
-        .build();
+      HttpClient client = HttpClient.newHttpClient();
+      HttpRequest request = HttpRequest.newBuilder()
+          .uri(URI.create(endereco))
+          .build();
 //    client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
 //        .thenApply(HttpResponse::body)
 //        .thenAccept(System.out::println)
@@ -35,10 +35,10 @@ public class PrincipalComBusca {
 //        })
 //        .join();
 
-    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+      HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-    String json = response.body();
-    System.out.println(json);
+      String json = response.body();
+      System.out.println(json);
 
     /*
     Vai fazer com que as propriedades do meu record:
@@ -51,20 +51,21 @@ public class PrincipalComBusca {
       ex json {"Title: "Contadores de Carros", "Year": 1995 }
       gson.fromJson(json, TituloOmdb.class);
     * */
-    Gson gson = new GsonBuilder()
-        .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
-        .create();
+      Gson gson = new GsonBuilder()
+          .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+          .create();
 
 //    Titulo meuTitulo = gson.fromJson(json, Titulo.class);
-    TituloOmdb meuTituloOmdb = gson.fromJson(json, TituloOmdb.class);
-    System.out.println("meuTituloOmdb: " + meuTituloOmdb);
+      TituloOmdb meuTituloOmdb = gson.fromJson(json, TituloOmdb.class);
+      System.out.println("meuTituloOmdb: " + meuTituloOmdb);
 
-    try {
       Titulo meuTitulo = new Titulo(meuTituloOmdb);
-    System.out.println("meuTitulo: " + meuTitulo);
+      System.out.println("meuTitulo: " + meuTitulo);
     } catch (NumberFormatException e) {
       System.out.println("Aconteceu um erro: ");
       System.out.println(e.getMessage());
+    } catch (IllegalArgumentException e) {
+      System.out.println("Algum erro de argumento na busca, verifique o endereço.");
     } finally {
       System.out.println("Executa independente de sucesso ou erro.");
     }
